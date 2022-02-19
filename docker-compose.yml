@@ -5,3 +5,8 @@ services:
     build: ./ScheduleGenerator
     ports:
       - "9000:80"
+
+networks:
+  default:
+    external: true
+    name: tech-test-software-engineer_default

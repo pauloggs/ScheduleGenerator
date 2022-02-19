@@ -1,3 +1,5 @@
+using System.Net.Http.Headers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -16,10 +18,34 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapGet("/generate", async (HttpClient hc) => 
+app.MapGet("/generate", async () => 
 {
-    await Task.Delay(1);
-    return "Hello world!";
+    var response = "Nothing";
+
+    try
+    {
+        using var client = new HttpClient
+        {
+            BaseAddress = new Uri("http://172.18.0.2/")
+        };
+
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        var responseMessage = client.GetAsync("recipe").Result;
+
+
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            response = await responseMessage.Content.ReadAsStringAsync();
+        }
+
+    }
+    catch (Exception ex)
+    {
+        response = ex.Message;
+    }
+
+    return response;
 });
 
 app.Run();
