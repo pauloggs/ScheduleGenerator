@@ -3,6 +3,7 @@
     using Moq;
     using Moq.Protected;
     using ScheduleGenerator.Services;
+    using System;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -42,7 +43,7 @@
 
 
         [Fact]
-        public async void GetRecipeData_ReturnsErrorTextWithInvalidHttpClientSetup()
+        public async Task GetRecipeData_ReturnsErrorTextWithInvalidHttpClientSetup()
         {
             // Arrange
             var httpMessageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose);
@@ -60,14 +61,20 @@
                 })
                 .Verifiable();
 
+            httpMessageHandlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ThrowsAsync(new Exception());
+
             var httpClient = new HttpClient(httpMessageHandlerMock.Object) { BaseAddress = new System.Uri("http://localhost:8080/") };
             var sut = new HttpService(httpClient);
 
-            // Act
-            var result = await sut.GetRecipeData();
-
             // Assert
-            Assert.Contains("Http response is failed status", result);
+            await Assert.ThrowsAsync<Exception>(() => sut.GetRecipeData());
         }
     }
 }

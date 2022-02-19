@@ -23,20 +23,16 @@
                 using var client = _httpClient;
 
                 client.DefaultRequestHeaders.Accept.Clear();
+                
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                
                 var responseMessage = client.GetAsync("recipe").Result;
-
-
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    return await responseMessage.Content.ReadAsStringAsync();
-                }
-
-                throw new Exception("Http response is failed status");
+                
+                return await responseMessage.Content.ReadAsStringAsync();
             }
             catch (Exception e)
             {
-                return $"Exception in GetRecipeData: {e.Message}";
+                throw new Exception("Exception in GetRecipeData", e);
             }
         }
     }
