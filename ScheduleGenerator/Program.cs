@@ -6,6 +6,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 
+var BaseUrl = builder.Configuration.GetSection("BaseUrl").Value;
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -26,7 +28,7 @@ app.MapGet("/generate", async () =>
     {
         using var client = new HttpClient
         {
-            BaseAddress = new Uri("http://172.18.0.2/")
+            BaseAddress = new Uri(BaseUrl)
         };
 
         client.DefaultRequestHeaders.Accept.Clear();

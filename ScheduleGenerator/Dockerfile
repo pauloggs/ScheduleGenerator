@@ -1,6 +1,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 
+ENV BaseUrl "http://172.18.0.2/"
+
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY *.csproj ./
