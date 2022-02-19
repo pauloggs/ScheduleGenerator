@@ -35,14 +35,13 @@ app.MapGet("/generate", async () =>
     // process this List<Recipe> object into a TowerSchedule object
     // return the TowerSchedule object
 
-    var response = await httpService.GetRecipeData();
-
+    var rawRecipeData = await httpService.GetRecipeData();
 
     var converterService = new ConverterService();
 
-    var recipies = converterService.GetRecipies(response);
+    var recipies = converterService.GetRecipies(rawRecipeData);
 
-    return response;
+    return rawRecipeData;
 });
 
 app.Run();

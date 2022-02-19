@@ -8,7 +8,7 @@ namespace ScheduleGenerator.Services
     {
         List<Recipe> GetRecipies(string rawData);
     }
-
+    
     public class ConverterService : IConverterService
     {
         public List<Recipe> GetRecipies(string rawData)
