@@ -1,3 +1,4 @@
+using ScheduleGenerator.Services;
 using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,30 +23,17 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/generate", async () => 
 {
-    var response = "Nothing";
+    var newHttpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
 
-    try
-    {
-        using var client = new HttpClient
-        {
-            BaseAddress = new Uri(BaseUrl)
-        };
+    var httpService = new HttpService(newHttpClient);
 
-        client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        var responseMessage = client.GetAsync("recipe").Result;
+    // TODO.
+    // call to get recipe data as a string (HttpService)
+    // deserialize this string as a List<Recipe> object (ConverterService)
+    // process this List<Recipe> object into a TowerSchedule object
+    // return the TowerSchedule object
 
-
-        if (responseMessage.IsSuccessStatusCode)
-        {
-            response = await responseMessage.Content.ReadAsStringAsync();
-        }
-
-    }
-    catch (Exception ex)
-    {
-        response = ex.Message;
-    }
+    var response = await httpService.GetRecipeData();
 
     return response;
 });
