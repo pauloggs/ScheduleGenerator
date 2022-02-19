@@ -1,6 +1,7 @@
 version: "3.9"  # optional since v1.27.0
+
 services:
   schedulegenerator:
     build: ./ScheduleGenerator
     ports:
-      - "8081:80"
+      - "9000:80"
