@@ -18,8 +18,6 @@
 
         public async Task<string> GetRecipeData()
         {
-            var response = "Nothing";
-
             try
             {
                 using var client = _httpClient;
@@ -31,16 +29,15 @@
 
                 if (responseMessage.IsSuccessStatusCode)
                 {
-                    response = await responseMessage.Content.ReadAsStringAsync();
+                    return await responseMessage.Content.ReadAsStringAsync();
                 }
 
+                throw new Exception("Http response is failed status");
             }
             catch (Exception ex)
             {
-                response = ex.Message;
+                return $"Exception in GetRecipeData: {ex.Message}";
             }
-
-            return response;
         }
     }
 }
