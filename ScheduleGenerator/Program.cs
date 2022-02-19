@@ -1,5 +1,7 @@
 using ScheduleGenerator.Services;
 using System.Net.Http.Headers;
+using Newtonsoft;
+using Newtonsoft.Json.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,8 @@ app.MapGet("/generate", async () =>
     // return the TowerSchedule object
 
     var response = await httpService.GetRecipeData();
+
+    dynamic d = JObject.Parse(response);
 
     return response;
 });
