@@ -5,7 +5,11 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleGenerator", "ScheduleGenerator\ScheduleGenerator.csproj", "{563A354B-3E77-49BF-BF17-0E87E8D3E106}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleGenerator.Tests", "ScheduleGenerator.Tests\ScheduleGenerator.Tests.csproj", "{A01D9794-8A1F-4594-A7A5-AA8E904AF0FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleGenerator.Tests", "ScheduleGenerator.Tests\ScheduleGenerator.Tests.csproj", "{A01D9794-8A1F-4594-A7A5-AA8E904AF0FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{89E380FC-BED8-4264-88B5-6F0D9851AE2E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{532DC696-9FD4-469D-8E2E-B67E0EFCBB84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +28,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{563A354B-3E77-49BF-BF17-0E87E8D3E106} = {89E380FC-BED8-4264-88B5-6F0D9851AE2E}
+		{A01D9794-8A1F-4594-A7A5-AA8E904AF0FF} = {532DC696-9FD4-469D-8E2E-B67E0EFCBB84}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E8265CDD-2AC4-45BD-AB21-260E74436EA7}

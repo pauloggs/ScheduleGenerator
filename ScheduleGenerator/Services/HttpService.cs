@@ -34,9 +34,9 @@
 
                 throw new Exception("Http response is failed status");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return $"Exception in GetRecipeData: {ex.Message}";
+                return $"Exception in GetRecipeData: {e.Message}";
             }
         }
     }
