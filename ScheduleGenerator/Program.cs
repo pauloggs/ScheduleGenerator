@@ -27,6 +27,12 @@ app.MapGet("/generate", async () =>
 
     var httpService = new HttpService(newHttpClient);
 
+    // TODO.
+    // call to get recipe data as a string (HttpService)
+    // deserialize this string as a List<Recipe> object (ConverterService)
+    // process this List<Recipe> object into a TowerSchedule object
+    // return the TowerSchedule object
+
     var response = await httpService.GetRecipeData();
 
     return response;
