@@ -1,7 +1,7 @@
-﻿using System.Net.Http.Headers;
-
-namespace ScheduleGenerator.Services
+﻿namespace ScheduleGenerator.Services
 {
+    using System.Net.Http.Headers;
+
     public interface IGetData
     {
         string GetRecipeData();
