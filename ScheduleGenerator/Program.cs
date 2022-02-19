@@ -37,7 +37,10 @@ app.MapGet("/generate", async () =>
 
     var response = await httpService.GetRecipeData();
 
-    dynamic d = JObject.Parse(response);
+
+    var converterService = new ConverterService();
+
+    var recipies = converterService.GetRecipies(response);
 
     return response;
 });

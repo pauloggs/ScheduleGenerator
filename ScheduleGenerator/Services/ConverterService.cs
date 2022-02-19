@@ -1,4 +1,6 @@
-﻿using ScheduleGenerator.Model;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ScheduleGenerator.Model;
 
 namespace ScheduleGenerator.Services
 {
@@ -11,7 +13,11 @@ namespace ScheduleGenerator.Services
     {
         public List<Recipe> GetRecipies(string rawData)
         {
-            throw new NotImplementedException();
+            var o = JsonConvert.DeserializeObject<JObject>(rawData);
+
+            var recipes = o.Value<JArray>("recipes").ToObject<List<Recipe>>();
+
+            return recipes;
         }
     }
 }
