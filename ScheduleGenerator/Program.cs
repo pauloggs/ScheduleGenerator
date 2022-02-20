@@ -38,7 +38,9 @@ app.MapPost("/schedules", async ([FromBody] RecipeTrayStarts recipeTrayStarts) =
 
     var towerSchedule = processorService.Process(recipes, recipeTrayStarts);
 
-    return JsonConvert.SerializeObject(towerSchedule);
+    var jsonSerializerSettings = new JsonSerializerSettings();
+    jsonSerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+    return JsonConvert.SerializeObject(towerSchedule, jsonSerializerSettings);
 });
 
 app.Run();

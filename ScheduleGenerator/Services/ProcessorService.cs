@@ -8,6 +8,8 @@
         TowerSchedule Process(List<Recipe> recipes, RecipeTrayStarts recipeTrayStarts);
 
         Recipe GetRecipe(string recipeName, List<Recipe> recipes);
+
+        List<Command> ProcessWateringPhases(string recipeName, int trayNumber, DateTime startDateTime, List<WateringPhase> wateringPhases);
     }
 
     public class ProcessorService : IProcessorService
@@ -21,7 +23,8 @@
         {
             TowerSchedule towerSchedule = new TowerSchedule()
             {
-                Commands = new List<Command>()
+                WateringCommands = new List<Command>(),
+                LightingCommands = new List<Command>()
             }; 
 
             foreach (var recipeTrayStart in recipeTrayStarts.Input)
@@ -30,14 +33,14 @@
 
                 var recipe = GetRecipe(recipeTrayStart.RecipeName, recipes);
 
-                towerSchedule.Commands.AddRange(ProcessWateringPhases(recipe.Name, recipeTrayStart.TrayNumber, startDateTime, recipe.WateringPhases));
+                towerSchedule.WateringCommands.AddRange(ProcessWateringPhases(recipe.Name, recipeTrayStart.TrayNumber, startDateTime, recipe.WateringPhases));
+
+                towerSchedule.LightingCommands.AddRange(ProcessLightingPhases(recipe.Name, recipeTrayStart.TrayNumber, startDateTime, recipe.LightingPhases));
             }
 
             return towerSchedule;
         }
 
-        // proccess each RecipeTrayStart
-        // what to return?
         public Recipe GetRecipe(string recipeName, List<Recipe> recipes)
         {
             try
@@ -50,7 +53,11 @@
             }
         }
 
-        public List<Command> ProcessWateringPhases(string recipeName, int trayNumber, DateTime startDateTime, List<WateringPhase> wateringPhases)
+        public List<Command> ProcessWateringPhases(
+            string recipeName, 
+            int trayNumber, 
+            DateTime startDateTime, 
+            List<WateringPhase> wateringPhases)
         {
             var result = new List<Command>();
 
@@ -82,6 +89,60 @@
                         Amount = amount,
                     });
                 }
+            }
+
+            return result;
+        }
+
+        public List<Command> ProcessLightingPhases(
+            string recipeName,
+            int trayNumber,
+            DateTime startDateTime,
+            List<LightingPhase> lightingPhases)
+        {
+            var result = new List<Command>();
+
+            var orderedLightigPhases = lightingPhases.OrderBy(wp => wp.Order);
+
+            var currentDateTime = startDateTime;
+
+            foreach (var lightingPhase in orderedLightigPhases)
+            {
+
+                var hours = lightingPhase.Hours;
+
+                var minutes = lightingPhase.Minutes;
+
+                var repetitions = lightingPhase.Repetitions;
+
+                if (lightingPhase.Operations != null)
+                {
+                    for (int repetition = 0; repetition < repetitions; repetition++)
+                    {
+                        var orderedOperations = lightingPhase.Operations.OrderBy(lp => lp.OffsetHours);
+
+                        foreach (var operation in orderedOperations)
+                        {
+                            var amount = operation.LightIntensity;
+
+                            var offsetHours = operation.OffsetHours;
+
+                            var offsetMinutes = operation.OffsetMinutes;
+
+                            currentDateTime = startDateTime
+                            .AddHours(hours * repetition + offsetHours)
+                            .AddMinutes(minutes * repetition + offsetMinutes);
+
+                            result.Add(new LightingCommand()
+                            {
+                                ExecutionDateTime = currentDateTime,
+                                TrayNumber = trayNumber,
+                                RecipeName = recipeName,
+                                LightIntensity = operation.LightIntensity
+                            });
+                        }
+                    } 
+                }                
             }
 
             return result;
