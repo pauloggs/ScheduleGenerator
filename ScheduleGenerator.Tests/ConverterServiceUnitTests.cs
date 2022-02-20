@@ -1,11 +1,11 @@
 ﻿namespace ScheduleGenerator.Tests
 {
     using ScheduleGenerator.Services;
-    using ScheduleGenerator.Model;
     using System.Collections.Generic;
     using Xunit;
     using Newtonsoft.Json;
     using System;
+    using ScheduleGenerator.Model.Input;
 
     public class ConverterServiceUnitTests
     {

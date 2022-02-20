@@ -1,4 +1,4 @@
-﻿namespace ScheduleGenerator.Model;
+﻿namespace ScheduleGenerator.Model.Input;
 
 public record Recipe(
     string Name)
