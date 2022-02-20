@@ -14,11 +14,6 @@
 
     public class ProcessorService : IProcessorService
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="recipes"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public TowerSchedule Process(List<Recipe> recipes, RecipeTrayStarts recipeTrayStarts)
         {
             TowerSchedule towerSchedule = new TowerSchedule()
@@ -121,17 +116,21 @@
                     {
                         var orderedOperations = lightingPhase.Operations.OrderBy(lp => lp.OffsetHours);
 
+                        currentDateTime = startDateTime
+                            .AddHours(hours * repetition)
+                            .AddMinutes(minutes * repetition);
+
                         foreach (var operation in orderedOperations)
                         {
                             var amount = operation.LightIntensity;
 
                             var offsetHours = operation.OffsetHours;
 
-                            var offsetMinutes = operation.OffsetMinutes;
+                            var executionTime = currentDateTime
+                                .AddHours(offsetHours)
+                                .AddMinutes(offsetHours);
 
-                            currentDateTime = startDateTime
-                            .AddHours(hours * repetition + offsetHours)
-                            .AddMinutes(minutes * repetition + offsetMinutes);
+                            var offsetMinutes = operation.OffsetMinutes;
 
                             result.Add(new LightingCommand()
                             {
