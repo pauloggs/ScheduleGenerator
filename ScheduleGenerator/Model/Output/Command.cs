@@ -2,7 +2,13 @@
 {
     public abstract class Command
     {
-        public DateTime ExecutionDateTime { get; set; }
+        private DateTime executionDateTime;
+
+        public DateTime ExecutionDateTime
+        {
+            get { return executionDateTime; }
+            set { executionDateTime = value.ToUniversalTime(); }
+        }
 
         public int TrayNumber { get; set; }
 

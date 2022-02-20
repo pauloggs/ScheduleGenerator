@@ -9,6 +9,11 @@
 
     public class ProcessorService : IProcessorService
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="recipes"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public void Process(List<Recipe> recipes)
         {
             throw new NotImplementedException();
