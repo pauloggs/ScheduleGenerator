@@ -61,7 +61,7 @@
         [InlineData(1, 1, 1, 1)]
         [InlineData(1, 1, 2, 2)]
         [InlineData(1, 2, 2, 4)]
-        [InlineData(2, 3, 3, 12)]
+        [InlineData(2, 3, 3, 18)]
         public void ProcessLightingPhases_ShouldReturnTheRightNumberOfCommands(
             int numberOfPhases,
             short numberOfRepetitions,
