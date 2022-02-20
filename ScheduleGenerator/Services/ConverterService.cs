@@ -1,16 +1,17 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ScheduleGenerator.Model.Input;
+using ScheduleGenerator.Model.Validators;
 
 namespace ScheduleGenerator.Services
 {
     public interface IConverterService
     {
         List<Recipe> GetRecipies(string rawData);
+
+        void ValidateRecipeTrayStarts(RecipeTrayStarts recipeTrayStarts);
     }
     
-    // should, return a List<Recipe> if provided with a correctly formatted rawData
-    // should, throw an exception if there are any issues with deserialisation
     public class ConverterService : IConverterService
     {
         public List<Recipe> GetRecipies(string rawData)
@@ -27,6 +28,25 @@ namespace ScheduleGenerator.Services
             {
                 throw new Exception($"Exception in GetRecipies: {e.Message}");
             }            
+        }
+
+        public void ValidateRecipeTrayStarts(RecipeTrayStarts recipeTrayStarts)
+        {
+            try
+            {
+                var validator = new RecipeTrayStartsValidator();
+
+                var result = validator.Validate(recipeTrayStarts);
+
+                if (!result.IsValid)
+                {
+                    throw new Exception($"{result}");
+                }
+            }
+            catch(Exception e)
+            {
+                throw new Exception($"GetRecipeTrayStarts exception: {e.Message}");
+            }
         }
     }
 }

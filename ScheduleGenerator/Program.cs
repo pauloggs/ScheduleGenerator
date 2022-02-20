@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ScheduleGenerator.Model.Input;
 using ScheduleGenerator.Services;
-using MiminalApis.Validators;
+using Carter;
+using ScheduleGenerator.Model.Output;
 using ScheduleGenerator.Model.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,31 +10,43 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<ConverterService>();
+builder.Services.AddScoped<ProcessorService>();
+builder.Services.AddCarter();
 
 var BaseUrl = builder.Configuration.GetSection("BaseUrl").Value;
 
 var app = builder.Build();
 
-
-// FLuentValidation support for dotnet6 isn't ready:
-// https://github.com/FluentValidation/FluentValidation/issues/1652
+app.MapCarter();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapPost("/schedules", async ([FromBody] RecipeTrayStarts recipeTrayStarts) =>
+app.MapPost("/schedules", async (HttpContext context, [FromBody] RecipeTrayStarts recipeTrayStarts) =>
 {
-    var newHttpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
+    try
+    {
+        // Ensure that posted RecipeTrayStarts request is valid via. FluentValidations
+        context.RequestServices.GetRequiredService<ConverterService>().ValidateRecipeTrayStarts(recipeTrayStarts);
 
-    var httpService = new HttpService(newHttpClient);
+        // Retrieve list of Recipes from the RecipeApi
+        var newHttpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
+        var httpService = new HttpService(newHttpClient);
+        var rawRecipeData = await httpService.GetRecipeData();
 
-    var rawRecipeData = await httpService.GetRecipeData();
+        // Deserialise to List<Recipe> model
+        var recipes = context.RequestServices.GetRequiredService<ConverterService>().GetRecipies(rawRecipeData);
 
-    var converterService = new ConverterService();
+        // Process each RecipeTrayStart object against the corresponding recipe to produce the commands. 
+        var towerSchedule = context.RequestServices.GetRequiredService<ProcessorService>().Process(recipes, recipeTrayStarts);
 
-    var recipies = converterService.GetRecipies(rawRecipeData);
-
-    return rawRecipeData;
+        return Results.Ok(towerSchedule);
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(e.Message);
+    }    
 });
 
 app.Run();

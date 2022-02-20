@@ -13,7 +13,5 @@
         public int TrayNumber { get; set; }
 
         public string? RecipeName { get; set; }
-
-        public CommandType CommandType { get; set; }
     }
 }

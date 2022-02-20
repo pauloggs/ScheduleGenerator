@@ -13,7 +13,7 @@
 
         public string RecipeName { get; set; }
 
-        public DateTime StartDate
+        public DateTime StartDate/* { get; set; }*/
         {
             get { return startDate; }
             set { startDate = value.ToUniversalTime(); }
