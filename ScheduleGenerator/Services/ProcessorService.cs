@@ -128,11 +128,11 @@
 
                             var offsetHours = operation.OffsetHours;
 
+                            var offsetMinutes = operation.OffsetMinutes;
+
                             var executionTime = currentDateTime
                                 .AddHours(offsetHours)
-                                .AddMinutes(offsetHours);
-
-                            var offsetMinutes = operation.OffsetMinutes;
+                                .AddMinutes(offsetMinutes);                            
 
                             result.Add(new LightingCommand()
                             {
