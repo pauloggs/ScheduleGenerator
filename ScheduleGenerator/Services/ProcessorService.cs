@@ -1,6 +1,6 @@
 ﻿namespace ScheduleGenerator.Services
 {
-    using ScheduleGenerator.Model;
+    using ScheduleGenerator.Model.Input;
 
     public interface IProcessorService
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ScheduleGenerator.Model;
+using ScheduleGenerator.Model.Input;
 
 namespace ScheduleGenerator.Services
 {
