@@ -10,15 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
-
+builder.Services.AddScoped<ConverterService>();
+builder.Services.AddScoped<ProcessorService>();
 builder.Services.AddCarter();
-
-// FLuentValidation support for dotnet6 isn't ready:
-// https://github.com/FluentValidation/FluentValidation/issues/1652
-////builder.Services.AddSingleton
-////    <IValidationAttributeAdapterProvider, CustomValidationAttributeAdapterProvider>();
-////builder.AddSingleton<IValidator<QueryStudentHobbiesDto>, QueryStudentHobbiesDtoValidator>();
-//builder.Services.AddSingleton<AbstractValidator<RecipeTrayStarts>, RecipeTrayStartsValidator>();
 
 var BaseUrl = builder.Configuration.GetSection("BaseUrl").Value;
 
@@ -29,24 +23,30 @@ app.MapCarter();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapPost("/schedules", async ([FromBody] RecipeTrayStarts recipeTrayStarts) =>
+app.MapPost("/schedules", async (HttpContext context, [FromBody] RecipeTrayStarts recipeTrayStarts) =>
 {
-    var converterService = new ConverterService();
+    try
+    {
+        // Ensure that posted RecipeTrayStarts request is valid via. FluentValidations
+        context.RequestServices.GetRequiredService<ConverterService>().ValidateRecipeTrayStarts(recipeTrayStarts);
 
-    converterService.ValidateRecipeTrayStarts(recipeTrayStarts);
+        // Retrieve list of Recipes from the RecipeApi
+        var newHttpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
+        var httpService = new HttpService(newHttpClient);
+        var rawRecipeData = await httpService.GetRecipeData();
 
-    var newHttpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
-    var httpService = new HttpService(newHttpClient);
-    
-    var processorService = new ProcessorService();
+        // Deserialise to List<Recipe> model
+        var recipes = context.RequestServices.GetRequiredService<ConverterService>().GetRecipies(rawRecipeData);
 
-    var rawRecipeData = await httpService.GetRecipeData();
+        // Process each RecipeTrayStart object against the corresponding recipe to produce the commands. 
+        var towerSchedule = context.RequestServices.GetRequiredService<ProcessorService>().Process(recipes, recipeTrayStarts);
 
-    var recipes = converterService.GetRecipies(rawRecipeData);
-
-    var towerSchedule = processorService.Process(recipes, recipeTrayStarts);
-
-    return towerSchedule;
+        return Results.Ok(towerSchedule);
+    }
+    catch (Exception e)
+    {
+        return Results.BadRequest(e.Message);
+    }    
 });
 
 app.Run();
