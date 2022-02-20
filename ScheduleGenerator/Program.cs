@@ -27,12 +27,6 @@ app.MapPost("/schedules", async ([FromBody] RecipeTrayStarts recipeTrayStarts) =
 
     var httpService = new HttpService(newHttpClient);
 
-    // TODO.
-    // call to get recipe data as a string (HttpService) DONE
-    // deserialize this string as a List<Recipe> object (ConverterService) DONE
-    // process this List<Recipe> object into a TowerSchedule object
-    // return the TowerSchedule object
-
     var rawRecipeData = await httpService.GetRecipeData();
 
     var converterService = new ConverterService();
