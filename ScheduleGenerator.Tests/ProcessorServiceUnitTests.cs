@@ -32,5 +32,36 @@
             // Assert
             Assert.Throws<Exception>(() => sut.GetRecipe("Cybil", recipeList));
         }
+
+        [Theory]
+        [InlineData(1, 1, 1)]
+        [InlineData(1, 3, 3)]
+        [InlineData(2, 4, 8)]
+        [InlineData(4, 10, 40)]
+        public void ProcessWateringPhases_ShouldReturnTheRightNumberOfCommands(
+            int numberOfPhases,
+            short numberOfRepetitions,
+            int expectedNumberOfCommands)
+        {
+            // Arrange
+            var sut = new ProcessorService();
+            var wateringPhases = TestHelper.TestWateringPhases(numberOfPhases, numberOfRepetitions);
+
+            // Act
+            var result = sut.ProcessWateringPhases("SomeName", 1, DateTime.Now, wateringPhases);
+
+            // Assert
+            Assert.Equal(expectedNumberOfCommands, result.Count);
+        }
+
+        [Fact]
+        public void ProcessWateringPhases_DoesSomething2()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

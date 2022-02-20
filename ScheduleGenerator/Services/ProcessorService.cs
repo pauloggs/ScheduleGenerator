@@ -58,7 +58,7 @@
 
             var currentDateTime = startDateTime;
 
-            foreach (var wateringPhase in  orderedWateringPhases)
+            foreach (var wateringPhase in orderedWateringPhases)
             {
                 var amount = wateringPhase.Amount;
 

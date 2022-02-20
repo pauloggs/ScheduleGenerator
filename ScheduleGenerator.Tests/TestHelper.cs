@@ -13,5 +13,32 @@
 
             return JsonConvert.DeserializeObject<List<Recipe>>(recipeString);
         }
+
+        public static RecipeTrayStarts TestRecipeTrayStarts()
+        {
+            var recipeTrayStarts = "{input:[{trayNumber:1,recipeName:\"Basil\",startDate:\"2022-01-24T12:30:00.0000000Z\"},{trayNumber:2,recipeName:\"Strawberries\",startDate:\"2021-13-08T17:33:00.0000000Z\"},{trayNumber:3,recipeName:\"Basil\",startDate:\"2030-01-01T23:45:00.0000000Z\"}]}";
+        
+            return JsonConvert.DeserializeObject<RecipeTrayStarts>(recipeTrayStarts);
+        }
+
+        public static List<WateringPhase> TestWateringPhases(int numberOfPhases, short numberOfRepetitions)
+        {
+            var wateringPhases = new List<WateringPhase>();
+
+            for (short i = 1; i <= numberOfPhases; i++)
+            {
+                var wateringPhase = new WateringPhase( 
+                    Name: $"WateringPhase_{i}", 
+                    Order: i, 
+                    Hours: 24, 
+                    Minutes: 0, 
+                    Amount: 100, 
+                    Repetitions: numberOfRepetitions);
+
+                wateringPhases.Add(wateringPhase);
+            }
+
+            return wateringPhases;
+        }
     }
 }
