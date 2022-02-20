@@ -1,7 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
+using ScheduleGenerator.Model.Input;
 using ScheduleGenerator.Services;
-using System.Net.Http.Headers;
-using Newtonsoft;
-using Newtonsoft.Json.Linq;
+using MiminalApis.Validators;
+using ScheduleGenerator.Model.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,25 +14,22 @@ var BaseUrl = builder.Configuration.GetSection("BaseUrl").Value;
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(opt =>
-    {
-        opt.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-        opt.RoutePrefix = string.Empty;
-    });
-}
 
-app.MapGet("/generate", async () => 
+// FLuentValidation support for dotnet6 isn't ready:
+// https://github.com/FluentValidation/FluentValidation/issues/1652
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.MapPost("/schedules", async ([FromBody] RecipeTrayStarts recipeTrayStarts) =>
 {
     var newHttpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
 
     var httpService = new HttpService(newHttpClient);
 
     // TODO.
-    // call to get recipe data as a string (HttpService)
-    // deserialize this string as a List<Recipe> object (ConverterService)
+    // call to get recipe data as a string (HttpService) DONE
+    // deserialize this string as a List<Recipe> object (ConverterService) DONE
     // process this List<Recipe> object into a TowerSchedule object
     // return the TowerSchedule object
 
