@@ -21,15 +21,15 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/recipes", async () => 
+app.MapPost("/schedules", async ([FromBody] RecipeTrayStarts recipeTrayStarts) =>
 {
     var newHttpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
 
     var httpService = new HttpService(newHttpClient);
 
     // TODO.
-    // call to get recipe data as a string (HttpService)
-    // deserialize this string as a List<Recipe> object (ConverterService)
+    // call to get recipe data as a string (HttpService) DONE
+    // deserialize this string as a List<Recipe> object (ConverterService) DONE
     // process this List<Recipe> object into a TowerSchedule object
     // return the TowerSchedule object
 
@@ -40,11 +40,6 @@ app.MapGet("/recipes", async () =>
     var recipies = converterService.GetRecipies(rawRecipeData);
 
     return rawRecipeData;
-});
-
-app.MapPost("/schedules", async ([FromBody] RecipeTrayStarts recipeTrayStarts) =>
-{
-    await Task.Delay(1);
 });
 
 app.Run();

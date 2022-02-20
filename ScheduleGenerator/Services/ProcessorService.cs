@@ -1,10 +1,11 @@
 ﻿namespace ScheduleGenerator.Services
 {
     using ScheduleGenerator.Model.Input;
+    using ScheduleGenerator.Model.Output;
 
     public interface IProcessorService
     {
-        void Process(List<Recipe> recipes);
+        TowerSchedule Process(List<Recipe> recipes, RecipeTrayStarts recipeTrayStarts);
     }
 
     public class ProcessorService : IProcessorService
@@ -14,7 +15,7 @@
         /// </summary>
         /// <param name="recipes"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public void Process(List<Recipe> recipes)
+        public TowerSchedule Process(List<Recipe> recipes, RecipeTrayStarts recipeTrayStarts)
         {
             throw new NotImplementedException();
         }
