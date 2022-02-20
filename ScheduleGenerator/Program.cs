@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+using ScheduleGenerator.Model.Input;
 using ScheduleGenerator.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +15,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/generate", async () => 
+app.MapGet("/recipes", async () => 
 {
     var newHttpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
 
@@ -32,6 +34,11 @@ app.MapGet("/generate", async () =>
     var recipies = converterService.GetRecipies(rawRecipeData);
 
     return rawRecipeData;
+});
+
+app.MapPost("/schedules", async ([FromBody] RecipeTrayStarts recipeTrayStarts) =>
+{
+    await Task.Delay(1);
 });
 
 app.Run();
