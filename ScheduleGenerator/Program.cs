@@ -1,7 +1,4 @@
 using ScheduleGenerator.Services;
-using System.Net.Http.Headers;
-using Newtonsoft;
-using Newtonsoft.Json.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,15 +10,8 @@ var BaseUrl = builder.Configuration.GetSection("BaseUrl").Value;
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(opt =>
-    {
-        opt.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-        opt.RoutePrefix = string.Empty;
-    });
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapGet("/generate", async () => 
 {
