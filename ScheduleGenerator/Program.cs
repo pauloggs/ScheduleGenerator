@@ -3,6 +3,7 @@ using ScheduleGenerator.Model.Input;
 using ScheduleGenerator.Services;
 using MiminalApis.Validators;
 using ScheduleGenerator.Model.Validators;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,9 +32,13 @@ app.MapPost("/schedules", async ([FromBody] RecipeTrayStarts recipeTrayStarts) =
 
     var converterService = new ConverterService();
 
-    var recipies = converterService.GetRecipies(rawRecipeData);
+    var recipes = converterService.GetRecipies(rawRecipeData);
 
-    return rawRecipeData;
+    var processorService = new ProcessorService();
+
+    var towerSchedule = processorService.Process(recipes, recipeTrayStarts);
+
+    return JsonConvert.SerializeObject(towerSchedule);
 });
 
 app.Run();
