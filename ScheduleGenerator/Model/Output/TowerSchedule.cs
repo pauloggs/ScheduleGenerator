@@ -2,8 +2,8 @@
 {
     public class TowerSchedule
     {
-        public List<Command> WateringCommands { get; set; }
+        public List<WateringCommand> WateringCommands { get; set; }
 
-        public List<Command> LightingCommands { get; set; }
+        public List<LightingCommand> LightingCommands { get; set; }
     }
 }

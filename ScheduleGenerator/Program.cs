@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using ScheduleGenerator.Model.Input;
 using ScheduleGenerator.Services;
 using Carter;
-using ScheduleGenerator.Model.Output;
-using ScheduleGenerator.Model.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +36,7 @@ app.MapPost("/schedules", async (HttpContext context, [FromBody] RecipeTrayStart
         // Deserialise to List<Recipe> model
         var recipes = context.RequestServices.GetRequiredService<ConverterService>().GetRecipies(rawRecipeData);
 
-        // Process each RecipeTrayStart object against the corresponding recipe to produce the commands. 
+        // Process each RecipeTrayStart object against the corresponding recipe to add to the Commands for the tower. 
         var towerSchedule = context.RequestServices.GetRequiredService<ProcessorService>().Process(recipes, recipeTrayStarts);
 
         return Results.Ok(towerSchedule);

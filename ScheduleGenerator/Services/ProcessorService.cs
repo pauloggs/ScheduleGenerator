@@ -9,22 +9,19 @@
 
         Recipe GetRecipe(string recipeName, List<Recipe> recipes);
 
-        List<Command> ProcessWateringPhases(string recipeName, int trayNumber, DateTime startDateTime, List<WateringPhase> wateringPhases);
+        List<WateringCommand> ProcessWateringPhases(string recipeName, int trayNumber, DateTime startDateTime, List<WateringPhase> wateringPhases);
+
+        List<LightingCommand> ProcessLightingPhases(string recipeName, int trayNumber, DateTime startDateTime, List<LightingPhase> lightingPhases);
     }
 
     public class ProcessorService : IProcessorService
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="recipes"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public TowerSchedule Process(List<Recipe> recipes, RecipeTrayStarts recipeTrayStarts)
         {
             TowerSchedule towerSchedule = new TowerSchedule()
             {
-                WateringCommands = new List<Command>(),
-                LightingCommands = new List<Command>()
+                WateringCommands = new List<WateringCommand>(),
+                LightingCommands = new List<LightingCommand>()
             }; 
 
             foreach (var recipeTrayStart in recipeTrayStarts.Input)
@@ -53,13 +50,13 @@
             }
         }
 
-        public List<Command> ProcessWateringPhases(
+        public List<WateringCommand> ProcessWateringPhases(
             string recipeName, 
             int trayNumber, 
             DateTime startDateTime, 
             List<WateringPhase> wateringPhases)
         {
-            var result = new List<Command>();
+            var result = new List<WateringCommand>();
 
             var orderedWateringPhases = wateringPhases.OrderBy(wp => wp.Order);
 
@@ -94,13 +91,13 @@
             return result;
         }
 
-        public List<Command> ProcessLightingPhases(
+        public List<LightingCommand> ProcessLightingPhases(
             string recipeName,
             int trayNumber,
             DateTime startDateTime,
             List<LightingPhase> lightingPhases)
         {
-            var result = new List<Command>();
+            var result = new List<LightingCommand>();
 
             var orderedLightigPhases = lightingPhases.OrderBy(wp => wp.Order);
 
@@ -121,21 +118,25 @@
                     {
                         var orderedOperations = lightingPhase.Operations.OrderBy(lp => lp.OffsetHours);
 
+                        currentDateTime = startDateTime
+                            .AddHours(hours * repetition)
+                            .AddMinutes(minutes * repetition);
+
                         foreach (var operation in orderedOperations)
                         {
                             var amount = operation.LightIntensity;
 
                             var offsetHours = operation.OffsetHours;
 
-                            var offsetMinutes = operation.OffsetMinutes;
+                            var executionTime = currentDateTime
+                                .AddHours(offsetHours)
+                                .AddMinutes(offsetHours);
 
-                            currentDateTime = startDateTime
-                            .AddHours(hours * repetition + offsetHours)
-                            .AddMinutes(minutes * repetition + offsetMinutes);
+                            var offsetMinutes = operation.OffsetMinutes;
 
                             result.Add(new LightingCommand()
                             {
-                                ExecutionDateTime = currentDateTime,
+                                ExecutionDateTime = executionTime,
                                 TrayNumber = trayNumber,
                                 RecipeName = recipeName,
                                 LightIntensity = operation.LightIntensity
