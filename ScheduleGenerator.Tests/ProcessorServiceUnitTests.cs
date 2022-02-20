@@ -34,6 +34,8 @@
         }
 
         [Theory]
+        [InlineData(0, 1, 0)]
+        [InlineData(1, 0, 0)]
         [InlineData(1, 1, 1)]
         [InlineData(1, 3, 3)]
         [InlineData(2, 4, 8)]
@@ -54,14 +56,28 @@
             Assert.Equal(expectedNumberOfCommands, result.Count);
         }
 
-        [Fact]
-        public void ProcessWateringPhases_DoesSomething2()
+        [Theory]
+        [InlineData(1, 1, 0, 0)]
+        [InlineData(1, 1, 1, 1)]
+        [InlineData(1, 1, 2, 2)]
+        [InlineData(1, 2, 2, 4)]
+        [InlineData(2, 3, 3, 12)]
+        public void ProcessLightingPhases_ShouldReturnTheRightNumberOfCommands(
+            int numberOfPhases,
+            short numberOfRepetitions,
+            short numberOfOperations,
+            int expectedNumberOfCommands
+            )
         {
             // Arrange
+            var sut = new ProcessorService();
+            var lightingPhases = TestHelper.TestLightingPhases(numberOfPhases, numberOfRepetitions, numberOfOperations);
 
             // Act
+            var result = sut.ProcessLightingPhases("SomeName", 1, DateTime.Now, lightingPhases);
 
             // Assert
+            Assert.Equal(expectedNumberOfCommands, result.Count);
         }
     }
 }

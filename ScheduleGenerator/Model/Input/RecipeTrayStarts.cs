@@ -13,10 +13,10 @@
 
         public string RecipeName { get; set; }
 
-        public DateTime StartDate
-        {
-            get { return startDate; }
-            set { startDate = value.ToUniversalTime(); }
-        }
+        public DateTime StartDate { get; set; }
+        //{
+        //    get { return startDate; }
+        //    set { startDate = value.ToUniversalTime(); }
+        //}
     }
 }

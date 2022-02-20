@@ -25,6 +25,6 @@ public record WateringPhase(string Name, short Order, short Hours, short Minutes
 public record LightingPhase(string Name, short Order, short Hours, short Minutes, short Repetitions)
     : Phase(Name, Order, Hours, Minutes, Repetitions)
 {
-    public IEnumerable<LightingPhaseOperation>? Operations { get; init; }
+    public IEnumerable<LightingPhaseOperation>? Operations { get; set; }
 };
 

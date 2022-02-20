@@ -27,18 +27,54 @@
 
             for (short i = 1; i <= numberOfPhases; i++)
             {
-                var wateringPhase = new WateringPhase( 
-                    Name: $"WateringPhase_{i}", 
-                    Order: i, 
-                    Hours: 24, 
-                    Minutes: 0, 
-                    Amount: 100, 
+                var wateringPhase = new WateringPhase(
+                    Name: $"WateringPhase_{i}",
+                    Order: i,
+                    Hours: 24,
+                    Minutes: 0,
+                    Amount: 100,
                     Repetitions: numberOfRepetitions);
 
                 wateringPhases.Add(wateringPhase);
             }
 
             return wateringPhases;
+        }
+
+        public static List<LightingPhase> TestLightingPhases(int numberOfPhases, short numberOfRepetitions, short numberOfOperations)
+        {
+            var lightingPhases = new List<LightingPhase>();
+
+            for (short i = 1; i <= numberOfPhases; i++)
+            {
+                var lightingPhase = new LightingPhase(
+                    Name: $"LightingPhase_{i}",
+                    Order: i,
+                    Hours: 24,
+                    Minutes: 0,
+                    Repetitions: numberOfRepetitions
+                    );
+
+                lightingPhases.Add(lightingPhase);
+
+                if (numberOfOperations > 0)
+                {
+                    var ops = new LightingPhaseOperation[numberOfOperations];
+
+                    for (short j = 0; j < numberOfOperations; j++)
+                    {
+                        ops[j] = new LightingPhaseOperation(
+                            OffsetHours: j,
+                            OffsetMinutes: 0,
+                            LightIntensity: (LightIntensity)(j % 4)
+                            );
+                    }
+
+                    lightingPhase.Operations = ops;
+                }
+            }
+
+            return lightingPhases;
         }
     }
 }
