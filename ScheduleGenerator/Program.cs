@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ScheduleGenerator.Model.Input;
 using ScheduleGenerator.Services;
+using MiminalApis.Validators;
+using ScheduleGenerator.Model.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,10 @@ builder.Services.AddHttpClient();
 var BaseUrl = builder.Configuration.GetSection("BaseUrl").Value;
 
 var app = builder.Build();
+
+
+// FLuentValidation support for dotnet6 isn't ready:
+// https://github.com/FluentValidation/FluentValidation/issues/1652
 
 app.UseSwagger();
 app.UseSwaggerUI();
